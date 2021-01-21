@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+
+            if(localStorage.count)
+            localStorage.count = Number(localStorage.count) +1;
+            else
+            localStorage.count = 1;
+
+
+
+            
+        </script>
+    </head>
+    <body>
+
+        <footer>
+            <p>&copy; 2013 SuperCool LLC</p>Visits:<span id="visitCount"></span>
+        </footer>
+        <script>
+            let visitCount= document.getElementById("visitCount");
+            visitCount.innerHTML = localStorage.count;
+        </script>
+
+    </body>
+    </html>

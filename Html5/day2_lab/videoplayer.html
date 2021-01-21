@@ -1,0 +1,306 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        .videoArea{
+            margin-left: 200px;
+            margin-top:100px;
+            width: 800px;
+            height: 600px;
+            position: relative;
+            border: 2px solid;
+            overflow: hidden;
+        }
+
+        .playerBtn{
+            text-align: left;
+            width:40px;
+            height: 40px;
+        }
+        .controls{
+            background-color: gray;
+            position: absolute;
+            width:100%;
+            height: 20%;
+            left:0px;
+            top:80%;
+            display: none;
+            padding: 30px;
+        }
+        progress{
+            height: 40px;
+        }
+        .progressBackground{
+            width:200px;
+            background-color: white;
+        }
+
+        .progress{
+            height: 30px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .progressValue{
+            width:0px;
+            background-color: green;
+        }
+
+
+        .overlay{
+            position: absolute;
+            width:100%;
+            height: 100%;
+            left:0px;
+            top:0px;
+            opacity: 0.5;
+            background-image: url(http://www.icons101.com/icon_png/size_128/id_29617/Button_Play01.png) ;
+            background-size: cover;
+        }
+        .video{
+            position: absolute;
+            width:100%;
+            height: 100%;
+            left:0px;
+            top:0px;
+            
+        }
+        .subtitle{
+            position: absolute;
+            width: 80%;
+            height: 15%;
+            left:10%;
+            top:80%;
+            font-size: 20px;
+            color:white;
+            background-color: black;
+            opacity: 0.5;
+            text-align: center;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+
+        .subtitleText{
+            transform: translate(-50%,-50%);
+            position: relative;
+            left:50%;
+            top:50%;
+        }
+    </style>
+</head>
+<body>
+    <div  class="videoArea" onclick="toggle()" onmouseover="showControls()" onmouseout="hideControls()" >
+        
+        
+        <video class="video" id="myvideo">
+            <source src="E:/songs/Sia - Rainbow (LYRICS).mp4" type="video/mp4">
+            <!-- <source src="https://www.w3schools.com/tags/movie.ogg" type="video/ogg"> -->
+            you browser not support video tag
+        </video>
+        <div class="subtitle" >
+            <div id="subtitle" class="subtitleText" ></div>
+        </div>
+        <div id="overlay" class="overlay" ></div>
+    
+        <div id="controls" class="controls" onclick="event.stopPropagation()">
+            <img onclick="play();" class="playerBtn" src="http://www.icons101.com/icon_png/size_128/id_75991/ButtonPlay.png" />
+            <img onclick="stop();" class="playerBtn" src="http://www.icons101.com/icon_png/size_128/id_75993/ButtonStop.png" />
+            <img onclick="pause();" class="playerBtn" src="http://www.icons101.com/icon_png/size_128/id_75990/ButtonPause.png" />
+            <div id="progressBackground" class="progress progressBackground">
+                <div id="progressValue" class="progress progressValue"></div>
+            </div>
+            <img onclick="movebackward();" class="playerBtn" src="http://www.pngall.com/wp-content/uploads/5/Rewind-Button-PNG-HD-Image.png" />
+            <img onclick="moveForward();" class="playerBtn" style="height: 20px; margin-bottom: 10px;" src="http://www.pngall.com/wp-content/uploads/5/Black-Fast-Forward-Button-PNG-Download-Image.png" />
+            <button id="mutebtn">Mute</button>
+            <input id="volumeslider" type="range" min="0" max="100" value="100" step="1">
+            <select id="videoSpeed" onchange="videoSpeedChanged()">
+                <option value="0.5">0.5x</option>
+                <option value="1" selected>1x</option>
+                <option value="2">2x</option>
+                <option value="4">4x</option>
+            </select>
+            <button onclick="fullScreen()">Full Screen</button>
+            <button onclick="window.location.href='https://www.w3schools.com/tags/movie.mp4'">Download</button>
+        </div>
+    </div>
+    
+    
+    <script>
+
+        document.addEventListener("keyup",function(e){
+            if(e.key==" "){
+                toggle();
+            }
+            else if(e.key=="ArrowRight"){
+                myVideo.currentTime+=2;
+            }
+            else if(e.key=="ArrowLeft"){
+                myVideo.currentTime-=2;
+            }
+        });
+
+
+
+        let videoId=1;
+
+
+
+        let myVideo = document.getElementById("myvideo");
+        let progressValue = document.getElementById("progressValue");
+        let progressBackground = document.getElementById("progressBackground");
+        let overlay = document.getElementById("overlay");
+        let videoSpeed = document.getElementById("videoSpeed");
+        let subtitleDiv = document.getElementById("subtitle");
+
+        progressBackground.addEventListener("click",function(e){
+            let maxWidth = progressBackground.clientWidth;
+            let barValue = e.offsetX;
+            let barValuePercent = barValue/maxWidth;
+            let currentTime = myVideo.duration * barValuePercent;
+            myVideo.currentTime = currentTime;
+
+
+
+        })
+
+        function getProgressBarWidth(){
+            return new Promise(function(resolve,reject){
+                
+                    let t = setInterval(function(){
+                        if(progressBackground.clientWidth>0){
+                            clearInterval(t);
+                            resolve(progressBackground.clientWidth);
+                        }
+                    },10);
+            });
+        }
+
+        
+
+        myVideo.addEventListener("loadedmetadata",async function(e){
+            console.log(myVideo.duration);
+
+            if(localStorage["video"+videoId]){
+                myVideo.currentTime = Number(localStorage["video"+videoId]);
+
+                let maxWidth = await getProgressBarWidth();
+            
+                console.log(maxWidth,(myVideo.currentTime/myVideo.duration) *maxWidth)
+                progressValue.style.width = (myVideo.currentTime/myVideo.duration) *maxWidth ;
+            
+            }
+            //myProgressBar.max = myVideo.duration;
+        })
+
+        let subtitlesArray = [{
+            fromTime:1,
+            toTime:2,
+            text:"Welcome how are you"
+        },{
+            fromTime:2,
+            toTime:5,
+            text:"I'm good thanks what about you"
+        },{
+            fromTime:5,
+            toTime:9,
+            text:"I'm well too"
+        },{
+            fromTime:9,
+            toTime:12,
+            text:"bye bye"
+        }]
+        
+        myVideo.addEventListener("timeupdate",function(e){
+            localStorage["video"+videoId] = myVideo.currentTime;
+            
+            let subtitles = subtitlesArray.filter((item)=>
+                myVideo.currentTime>=item.fromTime &&
+                myVideo.currentTime<=item.toTime
+            );
+            if(subtitles.length>0){
+                let subtitle = subtitles[0];
+                subtitleDiv.innerHTML = subtitle.text;
+            }
+            let maxWidth = progressBackground.clientWidth;
+            progressValue.style.width = (myVideo.currentTime/myVideo.duration) *maxWidth ;
+        })
+
+
+        function toggle(){
+            if(myVideo.paused){
+                play();
+            }
+            else
+            {
+                pause();
+            }
+        }
+
+        function play(){
+            myVideo.play();
+            overlay.style.display="none";
+        }
+
+        function stop(){
+            pause();
+            myVideo.currentTime = "0";
+        }
+
+        function pause(){
+            myVideo.pause();
+            overlay.style.display="block";
+        }
+
+        function moveForward(){
+            myVideo.currentTime += 1;
+        }
+        function movebackward(){
+            myVideo.currentTime -= 1;
+        }
+
+        function videoSpeedChanged(){
+            myVideo.playbackRate = Number(videoSpeed.value);
+        }
+        
+        function fullScreen()
+        {
+            myVideo.webkitEnterFullScreen();
+            
+        }
+
+
+        function showControls(){
+            controls.style.display="block";
+        }
+
+        function hideControls(){
+            controls.style.display="none";
+        }
+
+	       let mutebtn = document.getElementById("mutebtn");
+	       let volumeslider = document.getElementById("volumeslider");
+
+            mutebtn.addEventListener("click",vidmute,false);
+            volumeslider.addEventListener("change",setvolume,false);
+    
+        function vidmute(){
+	        if(myVideo.muted){
+		        myVideo.muted = false;
+		        mutebtn.innerHTML = "Mute";
+	        } else {
+		        myVideo.muted = true;
+		        mutebtn.innerHTML = "Unmute";
+	        }
+        }
+        function setvolume(){
+	        myVideo.volume = volumeslider.value / 100;
+        }
+
+        console.log({myVideo});
+    </script>
+</body>
+</html>

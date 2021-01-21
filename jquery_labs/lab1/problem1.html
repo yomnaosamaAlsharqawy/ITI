@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="jquery-3.5.1.min.js" ></script>
+        <style>
+
+            img{
+                float: left;
+            }
+            button{
+                float: left;
+                margin-top: 100px; 
+                width: 40px;
+                height: 40px;
+                text-align: center;
+            }
+            /* .dot {
+                height: 25px;
+                width: 25px;
+                background-color: #bbb;
+                border-radius: 50%;
+                display: inline-block;
+                margin-top: 300px;
+
+            } */
+        </style>
+        <script>
+            let images = ["1.jpg","2.jpg","3.jpg","4.jpg"];
+            // console.log(images);
+            let currentindex = 0;
+            $(function(){
+                $("#btn1").click(function(){
+                    $("img").animate({width: 'hide'} , 'slow',function(){
+                        
+
+                        if(currentindex == 0){
+                        currentindex = images.length-1;
+                    }
+                    else{
+                        currentindex = currentindex-1;
+                    }
+                    $("img").attr("src",String(images[currentindex]));
+                    $("img").animate({width: 'toggle'});
+
+                    });
+                    
+                    
+
+                })
+
+                $("#btn2").click(function(){
+                    $("img").animate({width: 'hide'} , 'slow', function(){
+
+
+                        if(currentindex == images.length-1){
+                        currentindex = 0; 
+                    }
+                    else{
+                        currentindex = currentindex+1;
+                    }
+                    $("img").attr("src",String(images[currentindex]));
+                    $("img").animate({width: 'toggle'});
+                        
+                    });
+                    
+                    
+
+                })
+            })
+            
+        </script>
+    </head>
+    <body>
+        <h1>Landscape Photos</h1>
+        <button id="btn1">&#8249;</button><!-- pervious -->
+        <!-- <div class="container"> -->
+            
+
+            <img src="1.jpg" alt="landscape" width="300px" height="300px" >
+            
+        <!-- </div> -->
+        <button id="btn2">&#8250;</button><!-- next -->
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </body>
+</html>

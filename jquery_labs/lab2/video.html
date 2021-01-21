@@ -1,0 +1,308 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <title>Document</title>
+    <style>
+
+        .videoArea{
+            margin-left: 200px;
+            margin-top:100px;
+            width: 800px;
+            height: 600px;
+            position: relative;
+            border: 2px solid;
+            overflow: hidden;
+        }
+
+        .playerBtn{
+            text-align: left;
+            width:40px;
+            height: 40px;
+        }
+        .controls{
+            background-color: gray;
+            position: absolute;
+            width:100%;
+            height: 10%;
+            left:0px;
+            top:85%;
+            display: none;
+            padding: 30px;
+        }
+        progress{
+            height: 40px;
+        }
+        .progressBackground{
+            width:200px;
+            background-color: white;
+        }
+
+        .progress{
+            height: 30px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .progressValue{
+            width:0px;
+            background-color: green;
+        }
+
+
+        .overlay{
+            position: absolute;
+            width:100%;
+            height: 100%;
+            left:0px;
+            top:0px;
+            opacity: 0.5;
+            background-image: url(http://www.icons101.com/icon_png/size_128/id_29617/Button_Play01.png) ;
+            background-size: cover;
+        }
+        .video{
+            position: absolute;
+            width:100%;
+            height: 100%;
+            left:0px;
+            top:0px;
+            
+        }
+        .subtitle{
+            position: absolute;
+            width: 80%;
+            height: 15%;
+            left:10%;
+            top:80%;
+            font-size: 20px;
+            color:white;
+            background-color: black;
+            opacity: 0.5;
+            text-align: center;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+
+        .subtitleText{
+            transform: translate(-50%,-50%);
+            position: relative;
+            left:50%;
+            top:50%;
+        }
+    </style>
+</head>
+<body>
+    <!-- <h1 style="text-align: center; color: brown; font-size: 50px;"> New video</h1> -->
+    <!-- <center> -->
+    <div  class="videoArea" onclick="toggle()" onmouseover="showControls()" onmouseout="hideControls()" >
+        
+        
+        <video class="video" id="myvideo" style="background-color: black;">
+            <source src="Captain America- The Winter Soldier - Trailer 2 (OFFICIAL).mp4" type="video/mp4">
+                <!-- <source src="https://www.w3schools.com/tags/movie.mp4" type="video/mp4"> -->
+            you browser not support video tag
+        </video>
+    
+        <div id="controls" class="controls" onclick="event.stopPropagation()">
+            <img onclick="play();" class="playerBtn" src="http://www.icons101.com/icon_png/size_128/id_75991/ButtonPlay.png" />
+            <img onclick="stop();" class="playerBtn" src="http://www.icons101.com/icon_png/size_128/id_75993/ButtonStop.png" />
+            <img onclick="pause();" class="playerBtn" src="http://www.icons101.com/icon_png/size_128/id_75990/ButtonPause.png" />
+            <div id="progressBackground" class="progress progressBackground">
+                <div id="progressValue" class="progress progressValue"></div>
+            </div>
+            <img onclick="movebackward();" class="playerBtn" src="http://www.pngall.com/wp-content/uploads/5/Rewind-Button-PNG-HD-Image.png" />
+            <img onclick="moveForward();" class="playerBtn" style="height: 20px; margin-bottom: 10px;" src="http://www.pngall.com/wp-content/uploads/5/Black-Fast-Forward-Button-PNG-Download-Image.png" />
+            <button id="mutebtn"><i class='fas fa-volume-up'></i></button>
+            <input id="volumeslider" type="range" min="0" max="100" value="100" step="1">
+            <select id="videoSpeed" onchange="videoSpeedChanged()">
+                <option value="0.5">0.5x</option>
+                <option value="1" selected>1x</option>
+                <option value="2">2x</option>
+                <option value="4">4x</option>
+            </select>
+            <button onclick="fullScreen()"><i class="fa fa-arrows-alt"></i></button>
+            <button onclick="window.location.href='Captain America- The Winter Soldier - Trailer 2 (OFFICIAL).mp4'"><i class="fa fa-download"></i></button>
+        </div>
+    </div>
+<!-- </center> -->
+    
+    
+    <script>
+
+document.addEventListener("keyup",function(e){
+            if(e.key==" "){
+                toggle();
+            }
+            else if(e.key=="ArrowRight"){
+                myVideo.currentTime+=2;
+            }
+            else if(e.key=="ArrowLeft"){
+                myVideo.currentTime-=2;
+            }
+        });
+
+
+
+        let videoId=1;
+
+
+
+        let myVideo = document.getElementById("myvideo");
+        let progressValue = document.getElementById("progressValue");
+        let progressBackground = document.getElementById("progressBackground");
+        let overlay = document.getElementById("overlay");
+        let videoSpeed = document.getElementById("videoSpeed");
+        let subtitleDiv = document.getElementById("subtitle");
+
+        progressBackground.addEventListener("click",function(e){
+            let maxWidth = progressBackground.clientWidth;
+            let barValue = e.offsetX;
+            let barValuePercent = barValue/maxWidth;
+            let currentTime = myVideo.duration * barValuePercent;
+            myVideo.currentTime = currentTime;
+
+
+
+        })
+
+        function getProgressBarWidth(){
+            return new Promise(function(resolve,reject){
+                
+                    let t = setInterval(function(){
+                        if(progressBackground.clientWidth>0){
+                            clearInterval(t);
+                            resolve(progressBackground.clientWidth);
+                        }
+                    },10);
+            });
+        }
+
+        
+
+        myVideo.addEventListener("loadedmetadata",async function(e){
+            console.log(myVideo.duration);
+
+            if(localStorage["video"+videoId]){
+                myVideo.currentTime = Number(localStorage["video"+videoId]);
+
+                let maxWidth = await getProgressBarWidth();
+            
+                console.log(maxWidth,(myVideo.currentTime/myVideo.duration) *maxWidth)
+                progressValue.style.width = (myVideo.currentTime/myVideo.duration) *maxWidth ;
+            
+            }
+            //myProgressBar.max = myVideo.duration;
+        })
+
+        let subtitlesArray = [{
+            fromTime:1,
+            toTime:2,
+            text:"Welcome how are you"
+        },{
+            fromTime:2,
+            toTime:5,
+            text:"I'm good thanks what about you"
+        },{
+            fromTime:5,
+            toTime:9,
+            text:"I'm well too"
+        },{
+            fromTime:9,
+            toTime:12,
+            text:"bye bye"
+        }]
+        
+        myVideo.addEventListener("timeupdate",function(e){
+            localStorage["video"+videoId] = myVideo.currentTime;
+            
+            let subtitles = subtitlesArray.filter((item)=>
+                myVideo.currentTime>=item.fromTime &&
+                myVideo.currentTime<=item.toTime
+            );
+            if(subtitles.length>0){
+                let subtitle = subtitles[0];
+                subtitleDiv.innerHTML = subtitle.text;
+            }
+            let maxWidth = progressBackground.clientWidth;
+            progressValue.style.width = (myVideo.currentTime/myVideo.duration) *maxWidth ;
+        })
+
+
+        function toggle(){
+            if(myVideo.paused){
+                play();
+            }
+            else
+            {
+                pause();
+            }
+        }
+
+        function play(){
+            myVideo.play();
+            overlay.style.display="none";
+        }
+
+        function stop(){
+            pause();
+            myVideo.currentTime = "0";
+        }
+
+        function pause(){
+            myVideo.pause();
+            overlay.style.display="block";
+        }
+
+        function moveForward(){
+            myVideo.currentTime += 1;
+        }
+        function movebackward(){
+            myVideo.currentTime -= 1;
+        }
+
+        function videoSpeedChanged(){
+            myVideo.playbackRate = Number(videoSpeed.value);
+        }
+        
+        function fullScreen()
+        {
+            myVideo.webkitEnterFullScreen();
+            
+        }
+
+
+        function showControls(){
+            controls.style.display="block";
+        }
+
+        function hideControls(){
+            controls.style.display="none";
+        }
+
+	       let mutebtn = document.getElementById("mutebtn");
+	       let volumeslider = document.getElementById("volumeslider");
+
+            mutebtn.addEventListener("click",vidmute,false);
+            volumeslider.addEventListener("change",setvolume,false);
+    
+        function vidmute(){
+	        if(myVideo.muted){
+		        myVideo.muted = false;
+		        mutebtn.innerHTML = "<i class='fas fa-volume-up'></i>";
+	        } else {
+		        myVideo.muted = true;
+		        mutebtn.innerHTML = "<i class='fas fa-volume-mute'></i>";
+	        }
+        }
+        function setvolume(){
+	        myVideo.volume = volumeslider.value / 100;
+        }
+
+        console.log({myVideo});
+    </script>
+</body>
+</html>
