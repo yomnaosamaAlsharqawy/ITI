@@ -42,6 +42,9 @@ elif question == 3:
 
 
     list = [1, 3, 3, 5, 2, 9]
+    # list = []
+    # for i in range(0, 10):
+    #     list.append(randint(0, 10))
     list_check(list)
 
 elif question == 4:
@@ -53,7 +56,9 @@ elif question == 4:
                     arr[j], arr[j + 1] = arr[j + 1], arr[j]
         print(f'sorted array is: {arr}')
 
-
+    # list = []
+    # for i in range(0, 10):
+    #     list.append(randint(0,50))
     list = [64, 34, 25, 12, 22, 11, 1, 90]
 
     BubbleSort(list)
