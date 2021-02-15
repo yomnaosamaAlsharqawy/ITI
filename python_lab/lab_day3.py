@@ -1,7 +1,6 @@
 import math
 from collections import Counter
 
-
 # Question 1
 # file = open("mockingjay.txt", "r")
 # final_string = file.read().replace('\n', ' ')
@@ -15,8 +14,9 @@ from collections import Counter
 # y1 = float(input('enter y for the first point:\n'))
 # x2 = float(input('enter x for the second point:\n'))
 # y2 = float(input('enter y for the second point:\n'))
-# distance = (y2-y1)/(x2-x1)
+# distance = math.sqrt(math.pow((x2 - x1), 2) + math.pow((y2 - y1), 2))
 # print(f'the distance between two point is = {distance}')
+
 
 # Question 3
 # class Vehicle:
@@ -45,9 +45,8 @@ class String:
         self.sentence = sentence
 
     def displayString(self):
-        sentence = self.sentence.split(' ')
-        reverse_sentence = ' '.join(reversed(sentence))
-        print("string : ", self.sentence, "\n reverse string: ", reverse_sentence)
+        sentence = self.sentence.upper()
+        print("string : ", self.sentence, "\n string uppercase: ", sentence)
 
 
 # sentence = input('please enter your sentence:\n')
@@ -67,7 +66,6 @@ class Circle:
     def displayperimeter(self):
         perimeter = 2 * math.pi * self.radius
         print("circle radius : ", self.radius, "\n circle perimeter: ", perimeter)
-
 
 radius = float(input('enter radius of circle:\n'))
 obj = Circle(radius)
