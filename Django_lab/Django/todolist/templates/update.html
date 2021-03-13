@@ -1,0 +1,17 @@
+{% extends "layout1.html" %}
+{% block title %} ADD NEW TASK {% endblock %}
+
+{% block body %}
+    <h1> UPDATE TASK</h1>
+    <form action="{% url "update" tasks.id%}" method="post">
+        {% csrf_token %}
+        <label>name</label>
+        <input type="text" name="task"><br>
+
+        <label>description</label>
+        <input type="text" name="description"><br>
+        <label>priority</label>
+        <input type="text" name="priority"><br>
+        <button type="submit">UPDATE</button>
+    </form>
+{% endblock %}

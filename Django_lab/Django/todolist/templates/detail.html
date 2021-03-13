@@ -1,0 +1,28 @@
+{% extends "layout1.html" %}
+{% block title %}TODO LIST{% endblock %}
+
+{% block body %}
+    <h1>Task Detail</h1>
+{#    {% for task in tasks %}#}
+        <h3>task name:</h3><p>{{ tasks.name }}</p>
+        <h3>task name:</h3><p>{{ tasks.description }}</p>
+        <h3>task name:</h3><p>{{ tasks.priority }}</p>
+        <h3>task name:</h3>
+        {% if tasks.active == True %}
+            <p>done</p>
+        {% else %}
+            <p>not done</p>
+        {% endif %}
+
+        <a href="{% url "index" %}">
+            <button>todo list</button>
+        </a>
+
+{#    {% endfor %}#}
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}list{% endblock %}
+{% block body %}
+<div style="align-items: center; text-align: center ; width: 400px; margin: 0 auto;border-style: solid">
+    <ul>
+        {% for task in tasks %}
+            <li><span style="margin-right: 25px">{{ task }}</span>
+            </li>
+            {% empty %}
+            <p>Oops! there is no city</p>
+        {% endfor %}
+    </ul>
+<a href="{% url "add" %}"><button>add new</button></a>
+</div>
+
+
+
+
+{% endblock %}
