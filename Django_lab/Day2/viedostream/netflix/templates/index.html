@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LIST OF MOVIES</title>
+</head>
+<body>
+<h1>This is our TODO LIST</h1>
+<a href="{% url "create" %}">
+    <button>add new</button>
+</a>
+<br><br>
+<table style="border: 1px solid black; border-collapse: collapse; width: 100%;">
+    {% for movie in movies %}
+        <tr>
+            <td style="border: 1px solid black; border-collapse: collapse;">
+                <img src="{{ movie.poster.url }}" width="200px" height="200px" alt="">
+            </td>
+            <td style="border: 1px solid black; border-collapse: collapse;">
+                <h3>{{ movie.name }}</h3>
+                <h3>{{ movie.year|date:"d-m-Y" }}</h3>
+            </td>
+            <td style="border: 1px solid black; border-collapse: collapse;">
+                <a href="{% url "detail" movie.id %}" style="margin-right: 20px">
+                    <button>detail</button>
+                </a>
+
+                <a href="{% url "update" movie.id %}" style="margin-right: 20px">
+                    <button>update</button>
+                </a>
+                <a href="{% url "delete" movie.id %}">
+                    <button>delete</button>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+
+</body>
+</html>
