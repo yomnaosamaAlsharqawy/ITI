@@ -34,9 +34,12 @@ def addNew(request):
 def updatetask(request, id):
     if request.method == "POST":
         task = Todolist.objects.get(id=id)
-        task.name = request.POST['task']
-        task.description = request.POST['description']
-        task.priority = request.POST['priority']
+        if request.POST['task']:
+            task.name = request.POST['task']
+        if request.POST['description']:
+            task.description = request.POST['description']
+        if request.POST['priority']:
+            task.priority = request.POST['priority']
         task.save()
         return redirect("index")
     todo = Todolist.objects.get(id=id)
@@ -57,4 +60,3 @@ def active(request, id):
     task.active = True
     task.save()
     return redirect("index")
-
