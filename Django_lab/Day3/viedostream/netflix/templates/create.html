@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Movies</title>
+</head>
+<body>
+    <form action="{% url "create" %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">ADD NEW MOVIE</button>
+    </form>
+
+</body>
+</html>
